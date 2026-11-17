@@ -1126,6 +1126,217 @@ savingsForm.addEventListener("submit", function(event) {
 });
 
 /* ========================================
+SAVE AND LOAD SAVINGS
+======================================== */
+
+function saveSavings() {
+
+    localStorage.setItem(
+        "nyscSavingsGoals",
+        JSON.stringify(savingsGoals)
+    );
+
+}
+
+function loadSavings() {
+
+    const saved = localStorage.getItem(
+        "nyscSavingsGoals"
+    );
+
+    if (saved) {
+
+        try {
+
+            const parsed = JSON.parse(saved);
+
+            savingsGoals = Array.isArray(parsed)
+                ? parsed
+                : [];
+
+        } catch (error) {
+
+            console.error("Could not load savings:", error);
+
+            savingsGoals = [];
+
+        }
+
+    }
+
+    displaySavings();
+
+}
+
+/* ========================================
+DISPLAY SAVINGS GOALS
+======================================== */
+
+function displaySavings() {
+
+    savingsGoalsContainer.innerHTML = "";
+
+    let total = 0;
+
+    savingsGoals.forEach(function(goal) {
+
+        total += Number(goal.saved) || 0;
+
+        const percentage = goal.target > 0
+            ? Math.min((goal.saved / goal.target) * 100, 100)
+            : 0;
+
+        const completed = goal.saved >= goal.target;
+
+        const goalElement = document.createElement("div");
+
+        goalElement.classList.add("savings-goal-card");
+
+        goalElement.innerHTML = `
+
+            <h3>${escapeHTML(goal.name)}</h3>
+
+            <p>
+                Saved: ₦${Number(goal.saved).toLocaleString()}
+            </p>
+
+            <p>
+                Target: ₦${Number(goal.target).toLocaleString()}
+            </p>
+
+            <div class="savings-progress">
+
+                <div style="width: ${percentage}%"></div>
+
+            </div>
+
+            <p>${percentage.toFixed(1)}% completed</p>
+
+            <p>
+                ${completed ? "🎉 Goal completed!" : "Keep saving!"}
+            </p>
+
+            <div class="savings-actions">
+
+                <button onclick="addSavings(${goal.id})">
+                    Add Money
+                </button>
+
+                <button onclick="withdrawSavings(${goal.id})">
+                    Withdraw
+                </button>
+
+                <button onclick="deleteSavings(${goal.id})">
+                    Delete
+                </button>
+
+            </div>
+
+        `;
+
+        savingsGoalsContainer.appendChild(goalElement);
+
+    });
+
+    if (savingsGoals.length === 0) {
+
+        savingsGoalsContainer.innerHTML =
+            "<p>No savings goals created yet.</p>";
+
+    }
+
+    totalSavingsDisplay.textContent =
+        `₦${total.toLocaleString()}`;
+
+    activeGoalsDisplay.textContent =
+        savingsGoals.filter(function(goal) {
+            return goal.saved < goal.target;
+        }).length;
+
+}
+
+/* ========================================
+ADD MONEY TO SAVINGS
+======================================== */
+
+function addSavings(id) {
+
+    const goal = savingsGoals.find(g => g.id === id);
+
+    if (!goal) return;
+
+    const amount = Number(
+        prompt("How much would you like to save?")
+    );
+
+    if (!Number.isFinite(amount) || amount <= 0) {
+        alert("Enter a valid amount.");
+        return;
+    }
+
+    goal.saved += amount;
+
+    saveSavings();
+
+    displaySavings();
+
+}
+
+
+/* ========================================
+WITHDRAW SAVINGS
+======================================== */
+
+function withdrawSavings(id) {
+
+    const goal = savingsGoals.find(g => g.id === id);
+
+    if (!goal) return;
+
+    const amount = Number(
+        prompt("How much would you like to withdraw?")
+    );
+
+    if (!Number.isFinite(amount) || amount <= 0) {
+        alert("Enter a valid amount.");
+        return;
+    }
+
+    if (amount > goal.saved) {
+        alert("You cannot withdraw more than you have saved.");
+        return;
+    }
+
+    goal.saved -= amount;
+
+    saveSavings();
+
+    displaySavings();
+
+}
+
+
+/* ========================================
+DELETE SAVINGS GOAL
+======================================== */
+
+function deleteSavings(id) {
+
+    if (!confirm("Are you sure you want to delete this savings goal?")) {
+        return;
+    }
+
+    savingsGoals = savingsGoals.filter(
+        goal => goal.id !== id
+    );
+
+    saveSavings();
+
+    displaySavings();
+
+}
+
+/* ========================================
 REFRESH EVERYTHING
 ======================================== */
 
@@ -1150,5 +1361,7 @@ START APPLICATION
 setDefaultDate();
 
 loadBudget();
+
+loadSavings();
 
 loadTransactions();
