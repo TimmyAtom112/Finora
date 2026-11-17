@@ -103,6 +103,28 @@ const budgetMessage =
 document.getElementById("budget-message");
 
 /* ========================================
+SAVINGS ELEMENTS
+======================================== */
+
+const savingsForm =
+    document.getElementById("savings-form");
+
+const savingsName =
+    document.getElementById("savings-name");
+
+const savingsTarget =
+    document.getElementById("savings-target");
+
+const savingsGoalsContainer =
+    document.getElementById("savings-goals");
+
+const totalSavingsDisplay =
+    document.getElementById("total-savings");
+
+const activeGoalsDisplay =
+    document.getElementById("active-goals");
+
+/* ========================================
 DATA
 ======================================== */
 
