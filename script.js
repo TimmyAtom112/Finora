@@ -1093,6 +1093,39 @@ return String(value)
 }
 
 /* ========================================
+CREATE SAVINGS GOAL
+======================================== */
+
+savingsForm.addEventListener("submit", function(event) {
+
+    event.preventDefault();
+
+    const name = savingsName.value.trim();
+    const target = Number(savingsTarget.value);
+
+    if (!name || target <= 0) {
+        alert("Please enter a valid goal name and target.");
+        return;
+    }
+
+    const goal = {
+        id: Date.now(),
+        name: name,
+        target: target,
+        saved: 0
+    };
+
+    savingsGoals.push(goal);
+
+    saveSavings();
+
+    displaySavings();
+
+    savingsForm.reset();
+
+});
+
+/* ========================================
 REFRESH EVERYTHING
 ======================================== */
 
