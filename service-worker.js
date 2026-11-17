@@ -1,13 +1,13 @@
 const CACHE_NAME = "expense-tracker-v10";
 
 const APP_FILES = [
-"./",
-"./index.html",
-"./style.css",
-"./script.js",
-"./manifest.json",
-"./icon-192.png",
-"./icon-512.png"
+    "./",
+    "./index.html",
+    "./style.css?v=10",
+    "./script.js?v=10",
+    "./manifest.json",
+    "./icon-192.png",
+    "./icon-512.png"
 ];
 
 /* ========================================
