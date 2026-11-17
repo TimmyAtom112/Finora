@@ -496,3 +496,65 @@ header h1 {
 }
 
 }
+
+/* ========================================
+UPGRADED DASHBOARD
+======================================== */
+
+.section-title {
+    margin: 25px 0 15px;
+    font-size: 20px;
+    color: #1f2937;
+}
+
+.dashboard {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.summary-card {
+    border-radius: 12px;
+    padding: 22px 15px;
+    transition: transform 0.2s ease;
+}
+
+.summary-card:hover {
+    transform: translateY(-3px);
+}
+
+.summary-card h3 {
+    font-size: 14px;
+    margin-bottom: 12px;
+    color: #64748b;
+}
+
+.summary-card p {
+    font-size: 22px;
+    font-weight: bold;
+    overflow-wrap: anywhere;
+}
+
+/* Mobile dashboard */
+
+@media (max-width: 600px) {
+
+    .dashboard {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+
+    .summary-card {
+        padding: 18px 12px;
+    }
+
+    .summary-card h3 {
+        font-size: 13px;
+    }
+
+    .summary-card p {
+        font-size: 19px;
+    }
+
+}
