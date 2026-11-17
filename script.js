@@ -134,6 +134,8 @@ let monthlyBudget = 0;
 
 let categoryChart = null;
 
+let savingsGoals = [];
+
 /* ========================================
 TODAY'S DATE
 ======================================== */
