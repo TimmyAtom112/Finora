@@ -114,6 +114,66 @@
 
 </section>
 
+<!-- ========================================
+SAVINGS MANAGEMENT
+======================================== --><section class="savings-section"><h2>Savings Management</h2>
+
+<div class="savings-overview">
+
+    <div class="summary-card">
+        <h3>Total Savings</h3>
+        <p id="total-savings">₦0</p>
+    </div>
+
+    <div class="summary-card">
+        <h3>Active Goals</h3>
+        <p id="active-goals">0</p>
+    </div>
+
+</div>
+
+<div class="savings-form-container">
+
+    <h3>Create Savings Goal</h3>
+
+    <form id="savings-form">
+
+        <input
+            type="text"
+            id="savings-name"
+            placeholder="Goal name (e.g. Laptop)"
+            required
+        >
+
+        <input
+            type="number"
+            id="savings-target"
+            placeholder="Target amount (₦)"
+            min="1"
+            required
+        >
+
+        <button type="submit">
+            Create Goal
+        </button>
+
+    </form>
+
+</div>
+
+<div class="savings-goals-container">
+
+    <h3>My Savings Goals</h3>
+
+    <div id="savings-goals">
+
+        <p>No savings goals created yet.</p>
+
+    </div>
+
+</div>
+
+</section>
 
 <!-- SPENDING BREAKDOWN -->
 <section class="spending-section">
