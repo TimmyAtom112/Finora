@@ -681,108 +681,85 @@ UPDATE BUDGET
 
 function updateBudget() {
 
-let spent = 0;
+    let spent = 0;
 
+    const today = new Date();
 
-transactions.forEach(
-    function(transaction) {
+    const currentMonth =
+        today.getFullYear() + "-" +
+        String(today.getMonth() + 1).padStart(2, "0");
+
+    transactions.forEach(function(transaction) {
 
         if (
-            transaction.type === "expense"
+            transaction.type === "expense" &&
+            transaction.date &&
+            transaction.date.startsWith(currentMonth)
         ) {
 
-            spent +=
-                Number(transaction.amount) || 0;
+            spent += Number(transaction.amount) || 0;
 
         }
 
+    });
+
+    const remaining = monthlyBudget - spent;
+
+    budgetAmount.textContent =
+        `₦${monthlyBudget.toLocaleString()}`;
+
+    budgetSpent.textContent =
+        `₦${spent.toLocaleString()}`;
+
+    budgetRemaining.textContent =
+        `₦${remaining.toLocaleString()}`;
+
+    if (monthlyBudget <= 0) {
+
+        budgetProgressBar.style.width = "0%";
+        budgetProgressBar.style.backgroundColor = "#22c55e";
+
+        budgetMessage.textContent =
+            "Set a budget to start tracking your spending.";
+
+        return;
+
     }
-);
 
-
-const remaining =
-    monthlyBudget - spent;
-
-
-budgetAmount.textContent =
-    `₦${monthlyBudget.toLocaleString()}`;
-
-budgetSpent.textContent =
-    `₦${spent.toLocaleString()}`;
-
-budgetRemaining.textContent =
-    `₦${remaining.toLocaleString()}`;
-
-
-if (monthlyBudget <= 0) {
+    const percentage = (spent / monthlyBudget) * 100;
 
     budgetProgressBar.style.width =
-        "0%";
+        `${Math.min(percentage, 100)}%`;
 
-    budgetProgressBar.style.backgroundColor =
-        "#22c55e";
+    if (percentage >= 100) {
 
-    budgetMessage.textContent =
-        "Set a budget to start tracking your spending.";
+        budgetProgressBar.style.backgroundColor = "#ef4444";
 
-    return;
+        budgetMessage.textContent =
+            `You've exceeded your budget by ₦${Math.abs(remaining).toLocaleString()}.`;
 
-}
+    } else if (percentage >= 80) {
 
+        budgetProgressBar.style.backgroundColor = "#f97316";
 
-const percentage =
-    (spent / monthlyBudget) * 100;
+        budgetMessage.textContent =
+            `Warning: you've used ${percentage.toFixed(0)}% of your budget.`;
 
+    } else if (percentage >= 60) {
 
-const progress =
-    Math.min(percentage, 100);
+        budgetProgressBar.style.backgroundColor = "#eab308";
 
+        budgetMessage.textContent =
+            `You've used ${percentage.toFixed(0)}% of your budget.`;
 
-budgetProgressBar.style.width =
-    `${progress}%`;
+    } else {
 
+        budgetProgressBar.style.backgroundColor = "#22c55e";
 
-if (percentage >= 100) {
+        budgetMessage.textContent =
+            `You've used ${percentage.toFixed(0)}% of your budget.`;
 
-    budgetProgressBar.style.backgroundColor =
-        "#ef4444";
-
-    budgetMessage.textContent =
-        `You've exceeded your budget by ₦${Math.abs(
-            remaining
-        ).toLocaleString()}.`;
-
-} else if (percentage >= 80) {
-
-    budgetProgressBar.style.backgroundColor =
-        "#f97316";
-
-    budgetMessage.textContent =
-        `Warning: you've used ${percentage.toFixed(
-            0
-        )}% of your budget.`;
-
-} else if (percentage >= 60) {
-
-    budgetProgressBar.style.backgroundColor =
-        "#eab308";
-
-    budgetMessage.textContent =
-        `You've used ${percentage.toFixed(
-            0
-        )}% of your budget.`;
-
-} else {
-
-    budgetProgressBar.style.backgroundColor =
-        "#22c55e";
-
-    budgetMessage.textContent =
-        `You've used ${percentage.toFixed(
-            0
-        )}% of your budget.`;
-
-}
+    }
 
 }
 
