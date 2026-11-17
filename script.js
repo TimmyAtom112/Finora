@@ -535,21 +535,23 @@ UPDATE SUMMARY
 
 function updateSummary() {
 
-let income = 0;
+    let income = 0;
+    let expenses = 0;
 
-let expenses = 0;
+    let monthlyIncome = 0;
+    let monthlyExpenses = 0;
 
+    const today = new Date();
 
-transactions.forEach(
-    function(transaction) {
+    const currentMonth =
+        today.getFullYear() + "-" +
+        String(today.getMonth() + 1).padStart(2, "0");
 
-        const amount =
-            Number(transaction.amount) || 0;
+    transactions.forEach(function(transaction) {
 
+        const amount = Number(transaction.amount) || 0;
 
-        if (
-            transaction.type === "income"
-        ) {
+        if (transaction.type === "income") {
 
             income += amount;
 
@@ -559,22 +561,42 @@ transactions.forEach(
 
         }
 
-    }
-);
+        if (
+            transaction.date &&
+            transaction.date.startsWith(currentMonth)
+        ) {
 
+            if (transaction.type === "income") {
 
-const currentBalance =
-    income - expenses;
+                monthlyIncome += amount;
 
+            } else {
 
-totalIncome.textContent =
-    `₦${income.toLocaleString()}`;
+                monthlyExpenses += amount;
 
-totalExpenses.textContent =
-    `₦${expenses.toLocaleString()}`;
+            }
 
-balance.textContent =
-    `₦${currentBalance.toLocaleString()}`;
+        }
+
+    });
+
+    totalIncome.textContent =
+        `₦${income.toLocaleString()}`;
+
+    totalExpenses.textContent =
+        `₦${expenses.toLocaleString()}`;
+
+    balance.textContent =
+        `₦${(income - expenses).toLocaleString()}`;
+
+    document.getElementById("monthly-income").textContent =
+        `₦${monthlyIncome.toLocaleString()}`;
+
+    document.getElementById("monthly-expenses").textContent =
+        `₦${monthlyExpenses.toLocaleString()}`;
+
+    document.getElementById("monthly-balance").textContent =
+        `₦${(monthlyIncome - monthlyExpenses).toLocaleString()}`;
 
 }
 
