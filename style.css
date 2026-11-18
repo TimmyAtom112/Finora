@@ -925,3 +925,249 @@ SAVINGS TRANSACTION HISTORY
         flex: 1;
     }
 }
+
+/* ========================================
+   FINANCIAL CALENDAR
+======================================== */
+
+.calendar-section {
+    background: #fff;
+    padding: 22px;
+    margin: 25px 0;
+    border-radius: 14px;
+    box-shadow: 0 3px 12px rgba(0,0,0,.06);
+}
+
+.calendar-section > h2 {
+    color: #1f2937;
+    font-size: 22px;
+    margin-bottom: 20px;
+}
+
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.calendar-header h3 {
+    color: #1f2937;
+    font-size: 18px;
+    text-align: center;
+}
+
+.calendar-header button,
+#today-button {
+    border: none;
+    background: #1f2937;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 7px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+#today-button {
+    background: #2563eb;
+    margin-bottom: 18px;
+}
+
+.calendar-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 18px;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: #475569;
+}
+
+.legend-item i,
+.calendar-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.legend-income,
+.calendar-dot.income {
+    background: #16a34a;
+}
+
+.legend-expense,
+.calendar-dot.expense {
+    background: #dc2626;
+}
+
+.legend-commitment,
+.calendar-dot.commitment {
+    background: #f59e0b;
+}
+
+.legend-savings,
+.calendar-dot.savings {
+    background: #2563eb;
+}
+
+/* Calendar weekday headings */
+
+.calendar-grid,
+.calendar-days {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 5px;
+}
+
+.calendar-day-name {
+    text-align: center;
+    font-size: 12px;
+    font-weight: bold;
+    color: #64748b;
+    padding: 10px 0;
+}
+
+/* Calendar dates */
+
+.calendar-date,
+.calendar-empty {
+    min-width: 0;
+    min-height: 65px;
+    border-radius: 8px;
+}
+
+.calendar-date {
+    border: 1px solid #e5e7eb;
+    background: #f8fafc;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px;
+    padding: 9px 2px;
+    cursor: pointer;
+    color: #1f2937;
+}
+
+.calendar-date:hover {
+    background: #eff6ff;
+    border-color: #2563eb;
+}
+
+.calendar-number {
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.calendar-dots {
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+    flex-wrap: wrap;
+}
+
+.calendar-today {
+    border: 2px solid #2563eb;
+    background: #eff6ff;
+}
+
+.calendar-selected {
+    background: #1f2937;
+    color: white;
+    border-color: #1f2937;
+}
+
+/* Selected date activities */
+
+.calendar-activities {
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 1px solid #e5e7eb;
+}
+
+.calendar-activities h3 {
+    color: #1f2937;
+    margin-bottom: 15px;
+    font-size: 17px;
+}
+
+.calendar-activity-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 13px;
+    background: #f8fafc;
+    border-radius: 9px;
+    margin-bottom: 10px;
+}
+
+.calendar-activity-item strong {
+    color: #1f2937;
+    font-size: 14px;
+}
+
+.calendar-activity-item p {
+    margin-top: 5px;
+    color: #64748b;
+    font-size: 13px;
+}
+
+/* Mobile layout */
+
+@media (max-width: 500px) {
+
+    .calendar-section {
+        padding: 14px;
+    }
+
+    .calendar-header h3 {
+        font-size: 16px;
+    }
+
+    .calendar-header button {
+        padding: 9px 12px;
+    }
+
+    .calendar-grid,
+    .calendar-days {
+        gap: 3px;
+    }
+
+    .calendar-day-name {
+        font-size: 10px;
+    }
+
+    .calendar-date,
+    .calendar-empty {
+        min-height: 52px;
+    }
+
+    .calendar-date {
+        padding: 7px 1px;
+        gap: 6px;
+    }
+
+    .calendar-number {
+        font-size: 12px;
+    }
+
+    .calendar-dot {
+        width: 6px;
+        height: 6px;
+    }
+
+    .calendar-legend {
+        gap: 9px;
+    }
+
+    .legend-item {
+        font-size: 11px;
+    }
+}
