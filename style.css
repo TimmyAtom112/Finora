@@ -1262,15 +1262,18 @@ outline-offset: 2px;
 }
 
 .theme-toggle {
-    width: 42px;
-    height: 42px;
+    width: 34px;
+    height: 34px;
     border: 1px solid var(--border);
     border-radius: 50%;
     background: var(--white);
     color: var(--text);
-    font-size: 20px;
+    font-size: 16px;
     cursor: pointer;
     flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .theme-toggle:hover {
