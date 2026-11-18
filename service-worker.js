@@ -1,10 +1,10 @@
-const CACHE_NAME = "finora-v1";
+const CACHE_NAME = "finora-v2";
 
 const APP_FILES = [
     "./",
     "./index.html",
-    "./style.css?v=13",
-    "./script.js?v=13",
+    "./style.css?v=14",
+    "./script.js?v=14",
     "./manifest.json",
     "./icon-192.png",
     "./icon-512.png"
@@ -16,25 +16,26 @@ INSTALL
 
 self.addEventListener("install", (event) => {
 
-event.waitUntil(
+    event.waitUntil(
 
-    caches.open(CACHE_NAME)
+        caches.open(CACHE_NAME)
 
-        .then((cache) => {
+            .then((cache) => {
 
-            return cache.addAll(APP_FILES);
+                return cache.addAll(APP_FILES);
 
-        })
+            })
 
-        .then(() => {
+            .then(() => {
 
-            return self.skipWaiting();
+                return self.skipWaiting();
 
-        })
+            })
 
-);
+    );
 
 });
+
 
 /* ========================================
 ACTIVATE
@@ -42,37 +43,32 @@ ACTIVATE
 
 self.addEventListener("activate", (event) => {
 
-event.waitUntil(
+    event.waitUntil(
 
-    caches.keys()
+        caches.keys()
 
-        .then((cacheNames) => {
+            .then((cacheNames) => {
 
-            return Promise.all(
+                return Promise.all(
 
-                cacheNames
-                    .filter(
-                        (name) =>
-                            name !== CACHE_NAME
-                    )
-                    .map(
-                        (name) =>
-                            caches.delete(name)
-                    )
+                    cacheNames
+                        .filter((name) => name !== CACHE_NAME)
+                        .map((name) => caches.delete(name))
 
-            );
+                );
 
-        })
+            })
 
-        .then(() => {
+            .then(() => {
 
-            return self.clients.claim();
+                return self.clients.claim();
 
-        })
+            })
 
-);
+    );
 
 });
+
 
 /* ========================================
 FETCH
@@ -80,115 +76,64 @@ FETCH
 
 self.addEventListener("fetch", (event) => {
 
-const request =
-    event.request;
+    const request = event.request;
 
+    if (request.method !== "GET") {
+        return;
+    }
 
-/* Only handle GET requests */
+    const url = new URL(request.url);
 
-if (request.method !== "GET") {
+    if (url.origin !== self.location.origin) {
+        return;
+    }
 
-    return;
+    event.respondWith(
 
-}
+        fetch(request, { cache: "no-store" })
 
+            .then((networkResponse) => {
 
-const url =
-    new URL(request.url);
+                if (networkResponse && networkResponse.ok) {
 
+                    const responseToCache = networkResponse.clone();
 
-/* Do not interfere with external websites/CDNs */
+                    caches.open(CACHE_NAME)
+                        .then((cache) => {
+                            cache.put(request, responseToCache);
+                        });
 
-if (
-    url.origin !== self.location.origin
-) {
+                }
 
-    return;
+                return networkResponse;
 
-}
+            })
 
+            .catch(() => {
 
-/*
-   Network first.
+                return caches.match(request)
 
-   This makes sure the latest version
-   from GitHub is used whenever internet
-   is available.
-*/
+                    .then((cachedResponse) => {
 
-event.respondWith(
+                        if (cachedResponse) {
+                            return cachedResponse;
+                        }
 
-    fetch(request, {
-        cache: "no-store"
-    })
+                        if (request.mode === "navigate") {
+                            return caches.match("./index.html");
+                        }
 
-        .then((networkResponse) => {
-
-            if (
-                networkResponse &&
-                networkResponse.ok
-            ) {
-
-                const responseToCache =
-                    networkResponse.clone();
-
-
-                caches.open(CACHE_NAME)
-                    .then((cache) => {
-
-                        cache.put(
-                            request,
-                            responseToCache
-                        );
+                        return new Response("Offline", {
+                            status: 503,
+                            headers: {
+                                "Content-Type": "text/plain"
+                            }
+                        });
 
                     });
 
-            }
+            })
 
-
-            return networkResponse;
-
-        })
-
-        .catch(() => {
-
-            return caches.match(request)
-
-                .then((cachedResponse) => {
-
-                    if (cachedResponse) {
-
-                        return cachedResponse;
-
-                    }
-
-
-                    if (
-                        request.mode === "navigate"
-                    ) {
-
-                        return caches.match(
-                            "./index.html"
-                        );
-
-                    }
-
-
-                    return new Response(
-                        "Offline",
-                        {
-                            status: 503,
-                            headers: {
-                                "Content-Type":
-                                    "text/plain"
-                            }
-                        }
-                    );
-
-                });
-
-        })
-
-);
+    );
 
 });
