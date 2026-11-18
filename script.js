@@ -2241,3 +2241,50 @@ displayCalendar();
 
 setComparisonDefaultMonths();
 compareMonthlyFinances();
+
+// FINORA THEME SETTINGS
+
+function initializeTheme() {
+    const themeToggle = document.getElementById("themeToggle");
+    const savedTheme = localStorage.getItem("finoraTheme");
+
+    // Light mode is the default
+    const currentTheme = savedTheme === "dark" ? "dark" : "light";
+
+    document.documentElement.setAttribute("data-theme", currentTheme);
+
+    updateThemeButton(currentTheme);
+
+    themeToggle.addEventListener("click", () => {
+        const activeTheme = document.documentElement.getAttribute("data-theme");
+
+        const newTheme = activeTheme === "dark" ? "light" : "dark";
+
+        document.documentElement.setAttribute("data-theme", newTheme);
+
+        localStorage.setItem("finoraTheme", newTheme);
+
+        updateThemeButton(newTheme);
+    });
+}
+
+function updateThemeButton(theme) {
+    const themeToggle = document.getElementById("themeToggle");
+
+    if (theme === "dark") {
+        themeToggle.textContent = "☀️";
+        themeToggle.setAttribute("aria-label", "Switch to light mode");
+        themeToggle.title = "Switch to light mode";
+    } else {
+        themeToggle.textContent = "🌙";
+        themeToggle.setAttribute("aria-label", "Switch to dark mode");
+        themeToggle.title = "Switch to dark mode";
+    }
+}
+
+// Initialize theme when the page is ready
+if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initializeTheme);
+} else {
+    initializeTheme();
+}
