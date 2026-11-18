@@ -1318,3 +1318,25 @@ outline-offset: 2px;
 :root[data-theme="dark"] h2 {
     color: #38BDF8;
 }
+
+/* Improve text visibility in dark mode */
+:root[data-theme="dark"] p,
+:root[data-theme="dark"] label,
+:root[data-theme="dark"] span,
+:root[data-theme="dark"] li {
+    color: var(--text);
+}
+
+/* Keep secondary text slightly muted */
+:root[data-theme="dark"] .muted,
+:root[data-theme="dark"] small,
+:root[data-theme="dark"] .subtitle {
+    color: var(--muted);
+}
+
+/* Make headings bright */
+:root[data-theme="dark"] h1,
+:root[data-theme="dark"] h2,
+:root[data-theme="dark"] h3 {
+    color: #38BDF8;
+}
