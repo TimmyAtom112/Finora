@@ -4,7 +4,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Finora | Personal Finance Manager</title>
 
-<link rel="stylesheet" href="style.css?v=13">
+<link rel="stylesheet" href="style.css?v=14">
 <link rel="manifest" href="manifest.json">
 
 <meta name="theme-color" content="#000000">
@@ -571,13 +571,20 @@ FINANCIAL COMMITMENTS
 
 </div>
 
-</div><!-- CHART.JS --><script src="https://cdn.jsdelivr.net/npm/chart.js"></script><!-- APP SCRIPT --><script src="script.js?v=13"></script><!-- SERVICE WORKER --><script>
+</div>
+<!-- CHART.JS -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js">
+</script>
+
+<!-- APP SCRIPT -->
+<script src="script.js?v=14"></script>
+<!-- SERVICE WORKER --><script>
     if ("serviceWorker" in navigator) {
 
         window.addEventListener("load", () => {
 
             navigator.serviceWorker
-                .register("./service-worker.js?v=13")
+                .register("./service-worker.js?v=14")
                 .then((registration) => {
 
                     console.log(
@@ -599,5 +606,6 @@ FINANCIAL COMMITMENTS
         });
 
     }
-</script></body>
+</script>
+</body>
 </html>
