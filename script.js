@@ -51,6 +51,16 @@ const commitmentsList = document.getElementById("commitments-list");
 const totalOwedDisplay = document.getElementById("total-owed");
 const totalReceivableDisplay = document.getElementById("total-receivable");
 
+// Financial Calendar Elements
+const calendarMonthYear = document.getElementById("calendar-month-year");
+const calendarDays = document.getElementById("calendar-days");
+const prevMonthButton = document.getElementById("prev-month");
+const nextMonthButton = document.getElementById("next-month");
+const todayButton = document.getElementById("today-button");
+
+const selectedDateTitle = document.getElementById("selected-date-title");
+const calendarActivityList = document.getElementById("calendar-activity-list");
+
 /* ========================================
 EDIT MODAL
 ======================================== */
@@ -148,6 +158,306 @@ let categoryChart = null;
 let savingsGoals = [];
 
 let commitments = [];
+
+let calendarCurrentDate = new Date();
+let selectedCalendarDate = getDateKey(new Date());
+
+// Format date as YYYY-MM-DD
+function getDateKey(date) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+
+    return `${year}-${month}-${day}`;
+}
+
+// Convert saved history dates into YYYY-MM-DD
+function normalizeCalendarDate(value) {
+    if (!value) return null;
+
+    const text = String(value);
+
+    // Already in YYYY-MM-DD format
+    if (/^\d{4}-\d{2}-\d{2}$/.test(text)) {
+        return text;
+    }
+
+    // Handle dates such as 18/11/2026
+    const parts = text.split("/");
+
+    if (parts.length === 3) {
+        let day = Number(parts[0]);
+        let month = Number(parts[1]);
+        let year = Number(parts[2]);
+
+        if (year < 100) year += 2000;
+
+        if (
+            day >= 1 && day <= 31 &&
+            month >= 1 && month <= 12
+        ) {
+            return getDateKey(new Date(year, month - 1, day));
+        }
+    }
+
+    const parsed = new Date(text);
+
+    if (Number.isNaN(parsed.getTime())) return null;
+
+    return getDateKey(parsed);
+}
+
+function getCalendarActivities(dateKey) {
+
+    const activities = [];
+
+    // Transactions
+    transactions.forEach(transaction => {
+
+        if (normalizeCalendarDate(transaction.date) === dateKey) {
+
+            activities.push({
+                type: transaction.type,
+                title: transaction.description,
+                amount: Number(transaction.amount) || 0
+            });
+
+        }
+
+    });
+
+    // Financial Commitments
+    commitments.forEach(commitment => {
+
+        const outstanding = Number(commitment.amount) - Number(commitment.paid);
+
+        // Commitment due dates
+        if (
+            commitment.dueDate === dateKey &&
+            outstanding > 0
+        ) {
+
+            activities.push({
+                type: "commitment",
+                title: "Due: " + commitment.name,
+                amount: outstanding
+            });
+
+        }
+
+        // Commitment payment history
+        if (Array.isArray(commitment.history)) {
+
+            commitment.history.forEach(item => {
+
+                if (normalizeCalendarDate(item.date) === dateKey) {
+
+                    activities.push({
+                        type: "commitment",
+                        title: item.type + ": " + commitment.name,
+                        amount: Number(item.amount) || 0
+                    });
+
+                }
+
+            });
+
+        }
+
+    });
+
+    // Savings History
+    savingsGoals.forEach(goal => {
+
+        if (Array.isArray(goal.history)) {
+
+            goal.history.forEach(item => {
+
+                if (normalizeCalendarDate(item.date) === dateKey) {
+
+                    activities.push({
+                        type: "savings",
+                        title: item.type + ": " + goal.name,
+                        amount: Number(item.amount) || 0
+                    });
+
+                }
+
+            });
+
+        }
+
+    });
+
+    return activities;
+}
+
+function displayCalendar() {
+
+    const year = calendarCurrentDate.getFullYear();
+    const month = calendarCurrentDate.getMonth();
+
+    calendarMonthYear.textContent =
+        calendarCurrentDate.toLocaleDateString("en-US", {
+            month: "long",
+            year: "numeric"
+        });
+
+    calendarDays.innerHTML = "";
+
+    const firstDay = new Date(year, month, 1).getDay();
+
+    // Convert Sunday-first to Monday-first
+    const startingDay = (firstDay + 6) % 7;
+
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+    // Empty spaces before the first day
+    for (let i = 0; i < startingDay; i++) {
+
+        const emptyCell = document.createElement("div");
+        emptyCell.className = "calendar-empty";
+
+        calendarDays.appendChild(emptyCell);
+
+    }
+
+    const today = getDateKey(new Date());
+
+    for (let day = 1; day <= daysInMonth; day++) {
+
+        const date = new Date(year, month, day);
+        const dateKey = getDateKey(date);
+
+        const activities = getCalendarActivities(dateKey);
+
+        const dayCell = document.createElement("button");
+
+        dayCell.type = "button";
+        dayCell.className = "calendar-date";
+
+        if (dateKey === today) {
+            dayCell.classList.add("calendar-today");
+        }
+
+        if (dateKey === selectedCalendarDate) {
+            dayCell.classList.add("calendar-selected");
+        }
+
+        dayCell.dataset.date = dateKey;
+
+        let indicators = "";
+
+        const types = [...new Set(activities.map(item => item.type))];
+
+        types.forEach(type => {
+
+            indicators += `<span class="calendar-dot ${type}"></span>`;
+
+        });
+
+        dayCell.innerHTML = `
+            <span class="calendar-number">${day}</span>
+            <span class="calendar-dots">${indicators}</span>
+        `;
+
+        calendarDays.appendChild(dayCell);
+
+    }
+
+    displaySelectedDateActivities();
+}
+
+function displaySelectedDateActivities() {
+
+    const date = new Date(selectedCalendarDate + "T12:00:00");
+
+    selectedDateTitle.textContent =
+        date.toLocaleDateString("en-US", {
+            weekday: "long",
+            day: "numeric",
+            month: "long",
+            year: "numeric"
+        });
+
+    const activities = getCalendarActivities(selectedCalendarDate);
+
+    calendarActivityList.innerHTML = "";
+
+    if (activities.length === 0) {
+
+        calendarActivityList.innerHTML =
+            "<p>No financial activities scheduled for this date.</p>";
+
+        return;
+    }
+
+    activities.forEach(activity => {
+
+        const item = document.createElement("div");
+
+        item.className = "calendar-activity-item";
+
+        item.innerHTML = `
+            <span class="calendar-dot ${escapeHTML(activity.type)}"></span>
+
+            <div>
+                <strong>${escapeHTML(activity.title)}</strong>
+                <p>₦${activity.amount.toLocaleString()}</p>
+            </div>
+        `;
+
+        calendarActivityList.appendChild(item);
+
+    });
+}
+
+// Previous month
+prevMonthButton.addEventListener("click", function() {
+
+    calendarCurrentDate.setMonth(
+        calendarCurrentDate.getMonth() - 1
+    );
+
+    displayCalendar();
+
+});
+
+// Next month
+nextMonthButton.addEventListener("click", function() {
+
+    calendarCurrentDate.setMonth(
+        calendarCurrentDate.getMonth() + 1
+    );
+
+    displayCalendar();
+
+});
+
+// Return to today
+todayButton.addEventListener("click", function() {
+
+    calendarCurrentDate = new Date();
+    selectedCalendarDate = getDateKey(new Date());
+
+    displayCalendar();
+
+});
+
+// Select a calendar date
+calendarDays.addEventListener("click", function(event) {
+
+    const selectedDay = event.target.closest(".calendar-date");
+
+    if (!selectedDay) return;
+
+    selectedCalendarDate = selectedDay.dataset.date;
+
+    displayCalendar();
+
+});
+
+
 
 /* ========================================
 TODAY'S DATE
@@ -1681,3 +1991,5 @@ loadBudget();
 loadSavings();
 loadCommitments();
 loadTransactions();
+
+displayCalendar();
