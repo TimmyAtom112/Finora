@@ -1109,11 +1109,12 @@ savingsForm.addEventListener("submit", function(event) {
     }
 
     const goal = {
-        id: Date.now(),
-        name: name,
-        target: target,
-        saved: 0
-    };
+    id: Date.now(),
+    name: name,
+    target: target,
+    saved: 0,
+    history: []
+ };
 
     savingsGoals.push(goal);
 
@@ -1180,29 +1181,59 @@ function displaySavings() {
 
     savingsGoals.forEach(function(goal) {
 
-        total += Number(goal.saved) || 0;
+        // Support goals created before this update
+        if (!Array.isArray(goal.history)) {
+            goal.history = [];
+        }
 
-        const percentage = goal.target > 0
-            ? Math.min((goal.saved / goal.target) * 100, 100)
+        const saved = Number(goal.saved) || 0;
+        const target = Number(goal.target) || 0;
+
+        total += saved;
+
+        const percentage = target > 0
+            ? Math.min((saved / target) * 100, 100)
             : 0;
 
-        const completed = goal.saved >= goal.target;
+        const completed = saved >= target;
 
         const goalElement = document.createElement("div");
 
         goalElement.classList.add("savings-goal-card");
 
+        const historyHTML = goal.history.length > 0
+
+            ? [...goal.history].reverse().map(function(item) {
+
+                return `
+                    <div class="savings-history-item">
+
+                        <span>
+                            ${escapeHTML(item.type)}
+                        </span>
+
+                        <span>
+                            ₦${Number(item.amount).toLocaleString()}
+                        </span>
+
+                        <small>
+                            ${escapeHTML(item.date)}
+                        </small>
+
+                    </div>
+                `;
+
+            }).join("")
+
+            : "<p>No savings activity yet.</p>";
+
         goalElement.innerHTML = `
 
             <h3>${escapeHTML(goal.name)}</h3>
 
-            <p>
-                Saved: ₦${Number(goal.saved).toLocaleString()}
-            </p>
+            <p>Saved: ₦${saved.toLocaleString()}</p>
 
-            <p>
-                Target: ₦${Number(goal.target).toLocaleString()}
-            </p>
+            <p>Target: ₦${target.toLocaleString()}</p>
 
             <div class="savings-progress">
 
@@ -1232,6 +1263,14 @@ function displaySavings() {
 
             </div>
 
+            <div class="savings-history">
+
+                <h4>Transaction History</h4>
+
+                ${historyHTML}
+
+            </div>
+
         `;
 
         savingsGoalsContainer.appendChild(goalElement);
@@ -1250,8 +1289,10 @@ function displaySavings() {
 
     activeGoalsDisplay.textContent =
         savingsGoals.filter(function(goal) {
-            return goal.saved < goal.target;
+            return Number(goal.saved) < Number(goal.target);
         }).length;
+
+    saveSavings();
 
 }
 
@@ -1266,7 +1307,7 @@ function addSavings(id) {
     if (!goal) return;
 
     const amount = Number(
-        prompt("How much would you like to save?")
+        prompt("How much would you like to deposit?")
     );
 
     if (!Number.isFinite(amount) || amount <= 0) {
@@ -1274,7 +1315,25 @@ function addSavings(id) {
         return;
     }
 
+    if (!Array.isArray(goal.history)) {
+        goal.history = [];
+    }
+
+    goal.saved = Number(goal.saved) || 0;
+
     goal.saved += amount;
+
+    goal.history.push({
+
+        type: "Deposit",
+
+        amount: amount,
+
+        date: new Date().toLocaleDateString(),
+
+        balanceAfter: goal.saved
+
+    });
 
     saveSavings();
 
@@ -1302,12 +1361,33 @@ function withdrawSavings(id) {
         return;
     }
 
+    goal.saved = Number(goal.saved) || 0;
+
     if (amount > goal.saved) {
+
         alert("You cannot withdraw more than you have saved.");
+
         return;
+
+    }
+
+    if (!Array.isArray(goal.history)) {
+        goal.history = [];
     }
 
     goal.saved -= amount;
+
+    goal.history.push({
+
+        type: "Withdrawal",
+
+        amount: amount,
+
+        date: new Date().toLocaleDateString(),
+
+        balanceAfter: goal.saved
+
+    });
 
     saveSavings();
 
