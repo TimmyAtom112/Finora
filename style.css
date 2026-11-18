@@ -1340,3 +1340,27 @@ outline-offset: 2px;
 :root[data-theme="dark"] h3 {
     color: #38BDF8;
 }
+
+/* FINORA dark mode - form improvements */
+:root[data-theme="dark"] input,
+:root[data-theme="dark"] select,
+:root[data-theme="dark"] textarea {
+    background-color: #1E293B;
+    color: #F1F5F9;
+    border: 1px solid #475569;
+}
+
+:root[data-theme="dark"] input::placeholder,
+:root[data-theme="dark"] textarea::placeholder {
+    color: #94A3B8;
+    opacity: 1;
+}
+
+:root[data-theme="dark"] option {
+    background: #1E293B;
+    color: #F1F5F9;
+}
+
+:root[data-theme="dark"] form label {
+    color: #E2E8F0;
+}
