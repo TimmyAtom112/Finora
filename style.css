@@ -1280,7 +1280,10 @@ outline-offset: 2px;
     transform: scale(1.05);
 }
 
-/* FINORA DARK THEME */
+/* ========================================
+FINORA COMPLETE DARK THEME
+======================================== */
+
 :root[data-theme="dark"] {
     color-scheme: dark;
 
@@ -1289,65 +1292,78 @@ outline-offset: 2px;
     --surface: #1E293B;
     --border: #334155;
     --text: #F1F5F9;
-    --muted: #94A3B8;
+    --muted: #A3B2C5;
 
-    --shadow: 0 4px 18px rgba(0, 0, 0, 0.2);
-    --shadow-hover: 0 8px 25px rgba(0, 0, 0, 0.3);
+    --shadow: 0 4px 18px rgba(0, 0, 0, 0.22);
+    --shadow-hover: 0 8px 25px rgba(0, 0, 0, 0.32);
 }
+
+/* GENERAL */
 
 :root[data-theme="dark"] body {
     background: var(--background);
     color: var(--text);
 }
 
-:root[data-theme="dark"] input,
-:root[data-theme="dark"] select,
-:root[data-theme="dark"] textarea {
-    background: var(--surface);
-    color: var(--text);
-    border-color: var(--border);
-}
-
-:root[data-theme="dark"] .theme-toggle {
-    background: var(--surface);
-    color: var(--text);
-    border-color: var(--border);
-}
-
-/* Brighter headings in dark mode */
-:root[data-theme="dark"] h2 {
+:root[data-theme="dark"] h2,
+:root[data-theme="dark"] h3,
+:root[data-theme="dark"] h4 {
     color: #38BDF8;
 }
 
-/* Improve text visibility in dark mode */
-:root[data-theme="dark"] p,
-:root[data-theme="dark"] label,
-:root[data-theme="dark"] span,
-:root[data-theme="dark"] li {
+/* HEADER - preserve the logo's original colours */
+
+:root[data-theme="dark"] header {
+    background: #FFFFFF;
+    color: #0F172A;
+}
+
+/* MAIN SECTIONS */
+
+:root[data-theme="dark"] .summary-card,
+:root[data-theme="dark"] .transaction-form,
+:root[data-theme="dark"] .transactions,
+:root[data-theme="dark"] .budget-section,
+:root[data-theme="dark"] .spending-section,
+:root[data-theme="dark"] .savings-section,
+:root[data-theme="dark"] .commitments-section,
+:root[data-theme="dark"] .calendar-section,
+:root[data-theme="dark"] .comparison-section,
+:root[data-theme="dark"] .modal-content {
+    background: var(--white);
+    color: var(--text);
+    border-color: var(--border);
+}
+
+/* TEXT VISIBILITY */
+
+:root[data-theme="dark"] .summary-card p,
+:root[data-theme="dark"] .budget-info strong,
+:root[data-theme="dark"] .comparison-card strong,
+:root[data-theme="dark"] .category-name,
+:root[data-theme="dark"] .category-amount {
     color: var(--text);
 }
 
-/* Keep secondary text slightly muted */
-:root[data-theme="dark"] .muted,
-:root[data-theme="dark"] small,
-:root[data-theme="dark"] .subtitle {
+:root[data-theme="dark"] .summary-card h3,
+:root[data-theme="dark"] .transaction-info p,
+:root[data-theme="dark"] .transaction-info small,
+:root[data-theme="dark"] .budget-info span,
+:root[data-theme="dark"] .budget-message,
+:root[data-theme="dark"] .legend-item,
+:root[data-theme="dark"] .no-expenses {
     color: var(--muted);
 }
 
-/* Make headings bright */
-:root[data-theme="dark"] h1,
-:root[data-theme="dark"] h2,
-:root[data-theme="dark"] h3 {
-    color: #38BDF8;
-}
+/* FORMS */
 
-/* FINORA dark mode - form improvements */
 :root[data-theme="dark"] input,
 :root[data-theme="dark"] select,
 :root[data-theme="dark"] textarea {
-    background-color: #1E293B;
+    background: #1E293B;
     color: #F1F5F9;
     border: 1px solid #475569;
+    color-scheme: dark;
 }
 
 :root[data-theme="dark"] input::placeholder,
@@ -1361,6 +1377,162 @@ outline-offset: 2px;
     color: #F1F5F9;
 }
 
-:root[data-theme="dark"] form label {
+:root[data-theme="dark"] form label,
+:root[data-theme="dark"] .comparison-controls label {
     color: #E2E8F0;
+}
+
+/* SAVINGS AND COMMITMENTS */
+
+:root[data-theme="dark"] .savings-overview .summary-card,
+:root[data-theme="dark"] .commitments-overview .summary-card,
+:root[data-theme="dark"] .savings-goal-card,
+:root[data-theme="dark"] .commitment-card,
+:root[data-theme="dark"] .comparison-card {
+    background: #1E293B;
+    border-color: #334155;
+    color: var(--text);
+}
+
+:root[data-theme="dark"] .savings-history-item,
+:root[data-theme="dark"] .commitment-history-item {
+    background: #263449;
+    color: var(--text);
+}
+
+:root[data-theme="dark"] .savings-history-item span:nth-child(2),
+:root[data-theme="dark"] .commitment-history-item span:nth-child(2) {
+    color: var(--text);
+}
+
+:root[data-theme="dark"] .savings-history-item small,
+:root[data-theme="dark"] .commitment-history-item small {
+    color: var(--muted);
+}
+
+:root[data-theme="dark"] .commitment-status {
+    background: #78350F;
+    color: #FDE68A;
+}
+
+/* CALENDAR */
+
+:root[data-theme="dark"] .calendar-date {
+    background: #1E293B;
+    color: #F1F5F9;
+    border-color: #334155;
+}
+
+:root[data-theme="dark"] .calendar-date:hover,
+:root[data-theme="dark"] .calendar-today {
+    background: #243B5A;
+    border-color: #60A5FA;
+    color: #FFFFFF;
+}
+
+:root[data-theme="dark"] .calendar-selected {
+    background: #2563EB;
+    border-color: #60A5FA;
+    color: #FFFFFF;
+}
+
+:root[data-theme="dark"] .calendar-day-name {
+    color: #A3B2C5;
+}
+
+:root[data-theme="dark"] .calendar-activities {
+    border-color: var(--border);
+}
+
+:root[data-theme="dark"] .calendar-activity-item {
+    background: #263449;
+    color: var(--text);
+}
+
+:root[data-theme="dark"] .calendar-activity-item p {
+    color: var(--muted);
+}
+
+/* COMPARISON */
+
+:root[data-theme="dark"] .comparison-chart-container {
+    background: #1E293B;
+}
+
+:root[data-theme="dark"] #financial-insights {
+    background: #172E4A;
+    border-left-color: #3B82F6;
+}
+
+:root[data-theme="dark"] #financial-insights h3 {
+    color: #93C5FD;
+}
+
+:root[data-theme="dark"] #financial-insights p {
+    color: #DCE8F5;
+}
+
+/* BUTTONS */
+
+:root[data-theme="dark"] .theme-toggle {
+    background: #1E293B;
+    color: #F1F5F9;
+    border-color: #475569;
+}
+
+:root[data-theme="dark"] .calendar-header button {
+    background: #2563EB;
+    color: white;
+}
+
+:root[data-theme="dark"] .delete-btn,
+:root[data-theme="dark"] .savings-actions button:last-child,
+:root[data-theme="dark"] .commitment-actions .delete-commitment {
+    background: #4C202B;
+    color: #FCA5A5;
+}
+
+:root[data-theme="dark"] .edit-btn {
+    background: #1E3A5F;
+    color: #93C5FD;
+}
+
+:root[data-theme="dark"] .modal-actions button[type="button"] {
+    background: #263449;
+    color: var(--text);
+}
+
+/* FINANCIAL STATUS COLOURS */
+
+:root[data-theme="dark"] .income {
+    color: #34D399;
+}
+
+:root[data-theme="dark"] .expense {
+    color: #F87171;
+}
+
+/* SMOOTH THEME TRANSITION */
+
+body,
+header,
+.summary-card,
+.transaction-form,
+.transactions,
+.budget-section,
+.spending-section,
+.savings-section,
+.commitments-section,
+.calendar-section,
+.comparison-section,
+.savings-goal-card,
+.commitment-card,
+.comparison-card,
+.calendar-date,
+input,
+select,
+textarea {
+    transition: background-color 0.2s ease,
+                color 0.2s ease,
+                border-color 0.2s ease;
 }
