@@ -93,7 +93,7 @@ width: 240px;
 max-width: 85%;
 height: auto;
 display: block;
-margin: 5px 0 5px 0;
+margin: 5px auto;
 }
 
 /* ========================================
@@ -1578,4 +1578,20 @@ textarea {
 /* Form labels */
 :root[data-theme="dark"] label {
     color: #E2E8F0 !important;
+}
+
+/* FINORA LOGO - ALIGN LEFT */
+
+.app-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.app-header .finora-logo {
+    width: 150px;
+    height: auto;
+    margin: 5px 0 5px 0;
+    display: block;
+    flex-shrink: 0;
 }
