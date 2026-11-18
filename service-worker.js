@@ -1,4 +1,4 @@
-const CACHE_NAME = "expense-tracker-v13";
+const CACHE_NAME = "finora-v1";
 
 const APP_FILES = [
     "./",
