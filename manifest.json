@@ -1,6 +1,6 @@
 {
-"name": "Expense Tracker",
-"short_name": "Expense Tracker",
+"name": "Finora - Personal Finance Manager",
+"short_name": "Finora",
 "start_url": "./",
 "scope": "./",
 "display": "standalone",
