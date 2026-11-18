@@ -61,6 +61,13 @@ const todayButton = document.getElementById("today-button");
 const selectedDateTitle = document.getElementById("selected-date-title");
 const calendarActivityList = document.getElementById("calendar-activity-list");
 
+// Monthly Comparison Elements
+const comparisonMonth1 = document.getElementById("comparison-month-1");
+const comparisonMonth2 = document.getElementById("comparison-month-2");
+const compareMonthsButton = document.getElementById("compare-months");
+const comparisonResults = document.getElementById("comparison-results");
+const financialInsights = document.getElementById("financial-insights");
+
 /* ========================================
 EDIT MODAL
 ======================================== */
@@ -161,6 +168,242 @@ let commitments = [];
 
 let calendarCurrentDate = new Date();
 let selectedCalendarDate = getDateKey(new Date());
+
+let monthlyComparisonChart = null;
+
+function setComparisonDefaultMonths() {
+
+    const today = new Date();
+
+    const currentMonth = getDateKey(today).slice(0, 7);
+
+    const previousDate = new Date(
+        today.getFullYear(),
+        today.getMonth() - 1,
+        1
+    );
+
+    const previousMonth = getDateKey(previousDate).slice(0, 7);
+
+    comparisonMonth1.value = previousMonth;
+    comparisonMonth2.value = currentMonth;
+}
+
+function getMonthlyComparisonData(month) {
+
+    let income = 0;
+    let expenses = 0;
+
+    transactions.forEach(transaction => {
+
+        if (!transaction.date.startsWith(month)) {
+            return;
+        }
+
+        const amount = Number(transaction.amount) || 0;
+
+        if (transaction.type === "income") {
+            income += amount;
+        } else if (transaction.type === "expense") {
+            expenses += amount;
+        }
+
+    });
+
+    return {
+        income: income,
+        expenses: expenses,
+        balance: income - expenses
+    };
+}
+
+function compareMonthlyFinances() {
+
+    const month1 = comparisonMonth1.value;
+    const month2 = comparisonMonth2.value;
+
+    if (!month1 || !month2) {
+        alert("Please select both months.");
+        return;
+    }
+
+    if (month1 === month2) {
+        alert("Please select two different months.");
+        return;
+    }
+
+    const data1 = getMonthlyComparisonData(month1);
+    const data2 = getMonthlyComparisonData(month2);
+
+    const formatMoney = amount =>
+        "₦" + amount.toLocaleString("en-NG");
+
+    const formatMonth = month =>
+        new Date(month + "-01T12:00:00").toLocaleDateString(
+            "en-US",
+            {
+                month: "long",
+                year: "numeric"
+            }
+        );
+
+    comparisonResults.innerHTML = `
+        <div class="comparison-cards">
+
+            <div class="comparison-card">
+                <h3>${formatMonth(month1)}</h3>
+
+                <p>Income:
+                    <strong>${formatMoney(data1.income)}</strong>
+                </p>
+
+                <p>Expenses:
+                    <strong>${formatMoney(data1.expenses)}</strong>
+                </p>
+
+                <p>Balance:
+                    <strong>${formatMoney(data1.balance)}</strong>
+                </p>
+            </div>
+
+            <div class="comparison-card">
+                <h3>${formatMonth(month2)}</h3>
+
+                <p>Income:
+                    <strong>${formatMoney(data2.income)}</strong>
+                </p>
+
+                <p>Expenses:
+                    <strong>${formatMoney(data2.expenses)}</strong>
+                </p>
+
+                <p>Balance:
+                    <strong>${formatMoney(data2.balance)}</strong>
+                </p>
+            </div>
+
+        </div>
+    `;
+
+    updateComparisonChart(data1, data2, formatMonth(month1), formatMonth(month2));
+
+    displayFinancialInsights(data1, data2);
+}
+
+function updateComparisonChart(data1, data2, label1, label2) {
+
+    const ctx = document.getElementById(
+        "monthly-comparison-chart"
+    );
+
+    if (monthlyComparisonChart) {
+        monthlyComparisonChart.destroy();
+    }
+
+    monthlyComparisonChart = new Chart(ctx, {
+
+        type: "bar",
+
+        data: {
+
+            labels: ["Income", "Expenses", "Balance"],
+
+            datasets: [
+
+                {
+                    label: label1,
+                    data: [
+                        data1.income,
+                        data1.expenses,
+                        data1.balance
+                    ],
+                    backgroundColor: "#2563eb"
+                },
+
+                {
+                    label: label2,
+                    data: [
+                        data2.income,
+                        data2.expenses,
+                        data2.balance
+                    ],
+                    backgroundColor: "#16a34a"
+                }
+
+            ]
+
+        },
+
+        options: {
+
+            responsive: true,
+
+            maintainAspectRatio: false,
+
+            plugins: {
+                legend: {
+                    position: "bottom"
+                }
+            },
+
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+
+        }
+
+    });
+}
+
+function displayFinancialInsights(data1, data2) {
+
+    function getChange(oldValue, newValue) {
+
+        if (oldValue === 0) {
+            return newValue === 0
+                ? "No change"
+                : "Started from ₦0";
+        }
+
+        const percentage =
+            ((newValue - oldValue) / Math.abs(oldValue)) * 100;
+
+        const direction = percentage > 0
+            ? "increased"
+            : percentage < 0
+                ? "decreased"
+                : "remained unchanged";
+
+        return `${direction} by ${Math.abs(percentage).toFixed(1)}%`;
+    }
+
+    const incomeChange = getChange(
+        data1.income,
+        data2.income
+    );
+
+    const expenseChange = getChange(
+        data1.expenses,
+        data2.expenses
+    );
+
+    const balanceChange = getChange(
+        data1.balance,
+        data2.balance
+    );
+
+    financialInsights.innerHTML = `
+        <h3>Financial Insights</h3>
+
+        <p><strong>Income:</strong> Your income ${incomeChange}.</p>
+
+        <p><strong>Expenses:</strong> Your expenses ${expenseChange}.</p>
+
+        <p><strong>Balance:</strong> Your balance ${balanceChange}.</p>
+    `;
+}
 
 // Format date as YYYY-MM-DD
 function getDateKey(date) {
@@ -875,6 +1118,8 @@ function() {
 }
 
 );
+
+compareMonthsButton.addEventListener("click", compareMonthlyFinances);
 
 /* ========================================
 UPDATE SUMMARY
@@ -1993,3 +2238,6 @@ loadCommitments();
 loadTransactions();
 
 displayCalendar();
+
+setComparisonDefaultMonths();
+compareMonthlyFinances();
