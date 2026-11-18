@@ -468,7 +468,43 @@ FINANCIAL COMMITMENTS
 
 </section>
 
-</main><!-- EDIT TRANSACTION MODAL --><div class="modal" id="edit-modal"><div class="modal-content">
+<!-- FINORA DATA BACKUP -->
+
+<section class="backup-section">
+
+    <h2 class="section-title">Data Backup & Restore</h2>
+
+    <p>
+        Keep your financial records safe.
+        Download a backup or restore your records
+        from a previous backup.
+    </p>
+
+    <div class="backup-actions">
+
+        <button id="backupBtn" type="button">
+            ⬇️ Download Backup
+        </button>
+
+        <button id="restoreBtn" type="button">
+            ♻️ Restore Backup
+        </button>
+
+        <input
+            type="file"
+            id="restoreFile"
+            accept=".json,application/json"
+            hidden
+        >
+
+    </div>
+
+</section>
+
+</main>
+
+<!-- EDIT TRANSACTION MODAL -->
+<div class="modal" id="edit-modal"><div class="modal-content">
 
     <div class="modal-header">
 
