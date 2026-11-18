@@ -1,22 +1,18 @@
 <svg xmlns="http://www.w3.org/2000/svg"
      viewBox="0 0 440 110"
-     width="440"
-     height="110">
+     width="440" height="110">
 
     <defs>
         <linearGradient id="finoraGradient"
             x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#38bdf8"/>
-            <stop offset="100%" stop-color="#14b8a6"/>
+            <stop offset="0%" stop-color="#3B82F6"/>
+            <stop offset="100%" stop-color="#06D6B0"/>
         </linearGradient>
     </defs>
 
-    <!-- Logo Background -->
-    <rect x="5" y="5"
-          width="100" height="100"
-          rx="24" fill="#0f172a"/>
+    <rect x="5" y="5" width="100" height="100"
+          rx="24" fill="#0F172A"/>
 
-    <!-- F Symbol -->
     <path d="M34 78 V30 H77"
           fill="none"
           stroke="url(#finoraGradient)"
@@ -30,23 +26,18 @@
           stroke-width="11"
           stroke-linecap="round"/>
 
-    <!-- Wordmark -->
     <text x="125" y="63"
           font-family="Arial, sans-serif"
           font-size="43"
           font-weight="bold"
           letter-spacing="3"
-          fill="#0f172a">
-        FINORA
-    </text>
+          fill="#0F172A">FINORA</text>
 
-    <!-- Tagline -->
     <text x="128" y="86"
           font-family="Arial, sans-serif"
           font-size="11"
           letter-spacing="1.2"
-          fill="#64748b">
+          fill="#64748B">
         YOUR MONEY. YOUR GOALS. YOUR CONTROL.
     </text>
-
 </svg>
