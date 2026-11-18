@@ -11,13 +11,6 @@ color: #222;
 min-height: 100vh;
 }
 
-.finora-logo {
-    width: 220px;
-    max-width: 80%;
-    height: auto;
-    display: block;
-    margin: 10px auto;
-}
 
 /* =========================
 HEADER
@@ -1338,4 +1331,12 @@ SAVINGS TRANSACTION HISTORY
     .comparison-chart-container canvas {
         height: 240px !important;
     }
+}
+
+.finora-logo {
+    width: 220px;
+    max-width: 80%;
+    height: auto;
+    display: block;
+    margin: 10px auto;
 }
