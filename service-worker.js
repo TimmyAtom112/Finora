@@ -1,10 +1,10 @@
-const CACHE_NAME = "expense-tracker-v12";
+const CACHE_NAME = "expense-tracker-v13";
 
 const APP_FILES = [
     "./",
     "./index.html",
-    "./style.css?v=12",
-    "./script.js?v=12",
+    "./style.css?v=13",
+    "./script.js?v=13",
     "./manifest.json",
     "./icon-192.png",
     "./icon-512.png"
