@@ -2288,3 +2288,189 @@ if (document.readyState === "loading") {
 } else {
     initializeTheme();
 }
+
+/* ========================================
+   FINORA DATA BACKUP & RESTORE
+======================================== */
+
+const backupBtn = document.getElementById("backupBtn");
+const restoreBtn = document.getElementById("restoreBtn");
+const restoreFile = document.getElementById("restoreFile");
+
+const FINORA_STORAGE_KEYS = [
+    "nyscTransactions",
+    "nyscMonthlyBudget",
+    "nyscCommitments",
+    "nyscSavingsGoals"
+];
+
+
+// DOWNLOAD BACKUP
+
+backupBtn.addEventListener("click", function () {
+
+    const backupData = {};
+
+    FINORA_STORAGE_KEYS.forEach(key => {
+    backupData[key] = localStorage.getItem(key) ??
+        (key === "nyscMonthlyBudget" ? "0" : "[]");
+});
+
+    const backup = {
+        app: "FINORA",
+        version: 1,
+        createdAt: new Date().toISOString(),
+        data: backupData
+    };
+
+    const blob = new Blob(
+        [JSON.stringify(backup, null, 2)],
+        { type: "application/json" }
+    );
+
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement("a");
+
+    link.href = url;
+
+    link.download =
+        "FINORA-Backup-" +
+        new Date().toISOString().slice(0, 10) +
+        ".json";
+
+    link.click();
+
+    URL.revokeObjectURL(url);
+
+    alert("Your FINORA backup has been downloaded successfully!");
+});
+
+
+// OPEN RESTORE FILE SELECTOR
+
+restoreBtn.addEventListener("click", function () {
+    restoreFile.click();
+});
+
+
+// RESTORE BACKUP
+
+restoreFile.addEventListener("change", function () {
+
+    const file = restoreFile.files[0];
+
+    if (!file) return;
+
+    const reader = new FileReader();
+
+    reader.onload = function (event) {
+
+        try {
+
+            const backup = JSON.parse(event.target.result);
+
+            if (
+                backup.app !== "FINORA" ||
+                backup.version !== 1 ||
+                !backup.data
+            ) {
+                throw new Error("Invalid FINORA backup file.");
+            }
+
+            const data = backup.data;
+
+            // Validate all backup records before restoring
+            const validArrays = [
+                "nyscTransactions",
+                "nyscCommitments",
+                "nyscSavingsGoals"
+            ];
+
+            validArrays.forEach(key => {
+                if (
+                    typeof data[key] !== "string" ||
+                    !Array.isArray(JSON.parse(data[key]))
+                ) {
+                    throw new Error("Invalid backup data: " + key);
+                }
+            });
+
+            if (
+                data.nyscMonthlyBudget !== null &&
+                (
+                    typeof data.nyscMonthlyBudget !== "string" ||
+                    !Number.isFinite(Number(data.nyscMonthlyBudget))
+                )
+            ) {
+                throw new Error("Invalid budget data.");
+            }
+
+            const confirmed = confirm(
+                "Restoring this backup will replace your current " +
+                "transactions, budget, savings and commitments.\n\n" +
+                "Have you downloaded a backup of your current records?\n\n" +
+                "Do you want to continue?"
+            );
+
+            if (!confirmed) return;
+
+            // Keep current records in case restoration fails
+            const previousData = {};
+
+            FINORA_STORAGE_KEYS.forEach(key => {
+                previousData[key] = localStorage.getItem(key);
+            });
+
+            try {
+
+                FINORA_STORAGE_KEYS.forEach(key => {
+
+                    const value =
+                        data[key] === null && key === "nyscMonthlyBudget"
+                            ? "0"
+                            : data[key];
+
+                    localStorage.setItem(key, value);
+
+                });
+
+            } catch (error) {
+
+                // Roll back if saving fails
+                FINORA_STORAGE_KEYS.forEach(key => {
+
+                    if (previousData[key] === null) {
+                        localStorage.removeItem(key);
+                    } else {
+                        localStorage.setItem(key, previousData[key]);
+                    }
+
+                });
+
+                throw error;
+            }
+
+            alert(
+                "Your FINORA records have been restored successfully!"
+            );
+
+            location.reload();
+
+        } catch (error) {
+
+            alert(
+                "Restore failed: " + error.message
+            );
+
+        } finally {
+
+            restoreFile.value = "";
+
+        }
+
+    };
+
+    reader.readAsText(file);
+
+});
