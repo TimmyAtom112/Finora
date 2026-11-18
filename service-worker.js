@@ -1,9 +1,9 @@
-const CACHE_NAME = "finora-v3";
+const CACHE_NAME = "finora-v4";
 
 const APP_FILES = [
     "./",
     "./index.html",
-    "./style.css?v=14",
+    "./style.css?v=15",
     "./script.js?v=14",
     "./manifest.json",
     "./Icon-192.png",
