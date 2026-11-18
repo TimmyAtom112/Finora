@@ -1536,3 +1536,43 @@ textarea {
                 color 0.2s ease,
                 border-color 0.2s ease;
 }
+
+/* FINORA DARK MODE - FORM INPUT VISIBILITY */
+
+:root[data-theme="dark"] input,
+:root[data-theme="dark"] select,
+:root[data-theme="dark"] textarea {
+    background-color: #263449 !important;
+    color: #FFFFFF !important;
+    -webkit-text-fill-color: #FFFFFF !important;
+    border: 1px solid #64748B !important;
+    caret-color: #38BDF8;
+}
+
+/* Placeholder text */
+:root[data-theme="dark"] input::placeholder,
+:root[data-theme="dark"] textarea::placeholder {
+    color: #A3B2C5 !important;
+    opacity: 1;
+}
+
+/* Text while typing or editing */
+:root[data-theme="dark"] input:focus,
+:root[data-theme="dark"] textarea:focus,
+:root[data-theme="dark"] select:focus {
+    background-color: #263449 !important;
+    color: #FFFFFF !important;
+    border-color: #38BDF8 !important;
+    outline: none;
+}
+
+/* Dropdown options */
+:root[data-theme="dark"] option {
+    background-color: #263449;
+    color: #FFFFFF;
+}
+
+/* Form labels */
+:root[data-theme="dark"] label {
+    color: #E2E8F0 !important;
+}
