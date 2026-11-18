@@ -318,6 +318,52 @@ FINANCIAL COMMITMENTS
 
 </section>
 
+<!-- ========================================
+     MONTHLY FINANCIAL COMPARISON
+======================================== -->
+
+<section class="comparison-section">
+
+    <h2>Monthly Financial Comparison</h2>
+
+    <div class="comparison-controls">
+
+        <div>
+            <label for="comparison-month-1">First Month</label>
+            <input type="month" id="comparison-month-1">
+        </div>
+
+        <div>
+            <label for="comparison-month-2">Second Month</label>
+            <input type="month" id="comparison-month-2">
+        </div>
+
+        <button id="compare-months">
+            Compare Months
+        </button>
+
+    </div>
+
+    <div id="comparison-results">
+
+        <p>Select two months to compare your finances.</p>
+
+    </div>
+
+    <div class="comparison-chart-container">
+
+        <h3>Income and Expenses Comparison</h3>
+
+        <canvas id="monthly-comparison-chart"></canvas>
+
+    </div>
+
+    <div id="financial-insights">
+
+    </div>
+
+</section>
+
 <!-- SPENDING BREAKDOWN -->
 <section class="spending-section">
 
