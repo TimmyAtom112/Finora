@@ -1310,3 +1310,8 @@ outline-offset: 2px;
     color: var(--text);
     border-color: var(--border);
 }
+
+/* Brighter headings in dark mode */
+:root[data-theme="dark"] h2 {
+    color: #38BDF8;
+}
