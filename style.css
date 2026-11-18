@@ -1171,3 +1171,163 @@ SAVINGS TRANSACTION HISTORY
         font-size: 11px;
     }
 }
+
+/* ========================================
+   MONTHLY FINANCIAL COMPARISON
+======================================== */
+
+.comparison-section {
+    background: #fff;
+    padding: 22px;
+    margin: 25px 0;
+    border-radius: 14px;
+    box-shadow: 0 3px 12px rgba(0,0,0,.06);
+}
+
+.comparison-section > h2 {
+    color: #1f2937;
+    font-size: 22px;
+    margin-bottom: 20px;
+}
+
+.comparison-controls {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.comparison-controls div {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.comparison-controls label {
+    font-size: 13px;
+    font-weight: bold;
+    color: #475569;
+}
+
+.comparison-controls input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+#compare-months {
+    grid-column: 1 / -1;
+    padding: 13px;
+    background: #2563eb;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#compare-months:hover {
+    background: #1d4ed8;
+}
+
+.comparison-cards {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    margin: 20px 0;
+}
+
+.comparison-card {
+    background: #f8fafc;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 16px;
+}
+
+.comparison-card h3 {
+    color: #1f2937;
+    font-size: 16px;
+    margin-bottom: 15px;
+}
+
+.comparison-card p {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin: 12px 0;
+    font-size: 13px;
+    color: #64748b;
+}
+
+.comparison-card strong {
+    color: #1f2937;
+    font-size: 17px;
+}
+
+.comparison-chart-container {
+    margin-top: 30px;
+    padding: 15px;
+    background: #f8fafc;
+    border-radius: 12px;
+}
+
+.comparison-chart-container h3 {
+    color: #1f2937;
+    font-size: 16px;
+    margin-bottom: 20px;
+}
+
+.comparison-chart-container canvas {
+    width: 100% !important;
+    height: 280px !important;
+}
+
+#financial-insights {
+    margin-top: 25px;
+    padding: 18px;
+    background: #eff6ff;
+    border-left: 4px solid #2563eb;
+    border-radius: 10px;
+}
+
+#financial-insights h3 {
+    color: #1e40af;
+    margin-bottom: 12px;
+}
+
+#financial-insights p {
+    color: #334155;
+    font-size: 14px;
+    margin: 10px 0;
+    line-height: 1.5;
+}
+
+@media (max-width: 500px) {
+
+    .comparison-section {
+        padding: 16px;
+    }
+
+    .comparison-controls {
+        grid-template-columns: 1fr;
+    }
+
+    #compare-months {
+        grid-column: auto;
+    }
+
+    .comparison-cards {
+        grid-template-columns: 1fr;
+    }
+
+    .comparison-chart-container {
+        padding: 10px;
+    }
+
+    .comparison-chart-container canvas {
+        height: 240px !important;
+    }
+}
