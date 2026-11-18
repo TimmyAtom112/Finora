@@ -40,6 +40,17 @@ document.getElementById("category-breakdown");
 const spendingChart =
 document.getElementById("spending-chart");
 
+// Financial Commitments Elements
+const commitmentForm = document.getElementById("commitment-form");
+const commitmentName = document.getElementById("commitment-name");
+const commitmentAmount = document.getElementById("commitment-amount");
+const commitmentType = document.getElementById("commitment-type");
+const commitmentDate = document.getElementById("commitment-date");
+
+const commitmentsList = document.getElementById("commitments-list");
+const totalOwedDisplay = document.getElementById("total-owed");
+const totalReceivableDisplay = document.getElementById("total-receivable");
+
 /* ========================================
 EDIT MODAL
 ======================================== */
@@ -135,6 +146,8 @@ let monthlyBudget = 0;
 let categoryChart = null;
 
 let savingsGoals = [];
+
+let commitments = [];
 
 /* ========================================
 TODAY'S DATE
@@ -1077,6 +1090,231 @@ return categoryMap[value] || "Other";
 
 }
 
+// Add Financial Commitment
+commitmentForm.addEventListener("submit", function(event) {
+    event.preventDefault();
+
+    const name = commitmentName.value.trim();
+    const amount = Number(commitmentAmount.value);
+    const type = commitmentType.value;
+    const dueDate = commitmentDate.value;
+
+    if (!name || !Number.isFinite(amount) || amount <= 0 || !dueDate) {
+        alert("Please enter valid commitment details.");
+        return;
+    }
+
+    const commitment = {
+        id: Date.now(),
+        name: name,
+        amount: amount,
+        paid: 0,
+        type: type,
+        dueDate: dueDate,
+        status: "Pending",
+        history: []
+    };
+
+    commitments.push(commitment);
+
+    saveCommitments();
+    displayCommitments();
+
+    commitmentForm.reset();
+});
+
+// Save commitments
+function saveCommitments() {
+    localStorage.setItem(
+        "nyscCommitments",
+        JSON.stringify(commitments)
+    );
+}
+
+// Load commitments
+function loadCommitments() {
+    const saved = localStorage.getItem("nyscCommitments");
+
+    if (saved) {
+        try {
+            const parsed = JSON.parse(saved);
+            commitments = Array.isArray(parsed) ? parsed : [];
+        } catch (error) {
+            console.error("Error loading commitments:", error);
+            commitments = [];
+        }
+    }
+
+    displayCommitments();
+}
+
+function displayCommitments() {
+
+    commitmentsList.innerHTML = "";
+
+    let totalOwed = 0;
+    let totalReceivable = 0;
+
+    if (commitments.length === 0) {
+        commitmentsList.innerHTML =
+            "<p>No commitments recorded yet.</p>";
+    }
+
+    commitments.forEach(commitment => {
+
+        commitment.amount = Number(commitment.amount) || 0;
+        commitment.paid = Number(commitment.paid) || 0;
+
+        if (!Array.isArray(commitment.history)) {
+            commitment.history = [];
+        }
+
+        const outstanding = Math.max(
+            0,
+            commitment.amount - commitment.paid
+        );
+
+        commitment.status =
+            outstanding === 0 ? "Paid" :
+            commitment.paid > 0 ? "Partially Paid" :
+            "Pending";
+
+        if (commitment.type === "owe") {
+            totalOwed += outstanding;
+        } else {
+            totalReceivable += outstanding;
+        }
+
+        const card = document.createElement("div");
+        card.className = "commitment-card";
+
+        const typeLabel =
+            commitment.type === "owe" ? "I Owe" : "Owed to Me";
+
+        const historyHTML = commitment.history.length
+            ? commitment.history.slice().reverse().map(item => `
+                <div class="commitment-history-item">
+                    <span>${item.type}</span>
+                    <span>₦${Number(item.amount).toLocaleString()}</span>
+                    <small>${escapeHTML(item.date)}</small>
+                </div>
+            `).join("")
+            : "<p>No payment history yet.</p>";
+
+        card.innerHTML = `
+            <h3>${escapeHTML(commitment.name)}</h3>
+
+            <p><strong>Type:</strong> ${typeLabel}</p>
+
+            <p><strong>Original Amount:</strong>
+                ₦${commitment.amount.toLocaleString()}
+            </p>
+
+            <p><strong>Paid/Received:</strong>
+                ₦${commitment.paid.toLocaleString()}
+            </p>
+
+            <p><strong>Outstanding:</strong>
+                ₦${outstanding.toLocaleString()}
+            </p>
+
+            <p><strong>Due Date:</strong>
+                ${escapeHTML(commitment.dueDate)}
+            </p>
+
+            <p><strong>Status:</strong>
+                <span class="commitment-status">
+                    ${commitment.status}
+                </span>
+            </p>
+
+            <div class="commitment-actions">
+
+                ${outstanding > 0 ? `
+                    <button onclick="recordCommitmentPayment(${commitment.id})">
+                        Record Payment
+                    </button>
+                ` : ""}
+
+                <button class="delete-commitment"
+                    onclick="deleteCommitment(${commitment.id})">
+                    Delete
+                </button>
+
+            </div>
+
+            <div class="commitment-history">
+                <h4>Payment History</h4>
+                ${historyHTML}
+            </div>
+        `;
+
+        commitmentsList.appendChild(card);
+    });
+
+    totalOwedDisplay.textContent =
+        "₦" + totalOwed.toLocaleString();
+
+    totalReceivableDisplay.textContent =
+        "₦" + totalReceivable.toLocaleString();
+
+    saveCommitments();
+}
+
+function recordCommitmentPayment(id) {
+
+    const commitment = commitments.find(item => item.id === id);
+
+    if (!commitment) return;
+
+    const outstanding = commitment.amount - commitment.paid;
+
+    const amount = Number(
+        prompt(
+            `Outstanding balance: ₦${outstanding.toLocaleString()}\nEnter payment amount:`
+        )
+    );
+
+    if (!Number.isFinite(amount) || amount <= 0) {
+        alert("Enter a valid payment amount.");
+        return;
+    }
+
+    if (amount > outstanding) {
+        alert("Payment cannot exceed the outstanding balance.");
+        return;
+    }
+
+    commitment.paid += amount;
+
+    commitment.history.push({
+        type: commitment.type === "owe"
+            ? "Payment Made"
+            : "Payment Received",
+
+        amount: amount,
+
+        date: new Date().toLocaleDateString()
+    });
+
+    saveCommitments();
+    displayCommitments();
+}
+
+function deleteCommitment(id) {
+
+    if (!confirm("Are you sure you want to delete this commitment?")) {
+        return;
+    }
+
+    commitments = commitments.filter(
+        item => item.id !== id
+    );
+
+    saveCommitments();
+    displayCommitments();
+}
+
 /* ========================================
 ESCAPE HTML
 ======================================== */
@@ -1439,9 +1677,7 @@ START APPLICATION
 ======================================== */
 
 setDefaultDate();
-
 loadBudget();
-
 loadSavings();
-
+loadCommitments();
 loadTransactions();
