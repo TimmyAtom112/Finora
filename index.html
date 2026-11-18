@@ -175,6 +175,81 @@ SAVINGS MANAGEMENT
 
 </section>
 
+<!-- ========================================
+FINANCIAL COMMITMENTS
+======================================== --><section class="commitments-section"><h2>Financial Commitments</h2>
+
+<div class="commitments-overview">
+
+    <div class="summary-card">
+        <h3>I Owe</h3>
+        <p id="total-owed">₦0</p>
+    </div>
+
+    <div class="summary-card">
+        <h3>Owed to Me</h3>
+        <p id="total-receivable">₦0</p>
+    </div>
+
+</div>
+
+<div class="commitment-form-container">
+
+    <h3>Add Financial Commitment</h3>
+
+    <form id="commitment-form">
+
+        <input
+            type="text"
+            id="commitment-name"
+            placeholder="Name or description"
+            required
+        >
+
+        <input
+            type="number"
+            id="commitment-amount"
+            placeholder="Amount (₦)"
+            min="1"
+            required
+        >
+
+        <select id="commitment-type" required>
+
+            <option value="owe">I Owe</option>
+
+            <option value="receive">Owed to Me</option>
+
+        </select>
+
+        <input
+            type="date"
+            id="commitment-date"
+            required
+        >
+
+        <button type="submit">
+            Add Commitment
+        </button>
+
+    </form>
+
+</div>
+
+<div class="commitments-list-container">
+
+    <h3>My Commitments</h3>
+
+    <div id="commitments-list">
+
+        <p>No commitments recorded yet.</p>
+
+    </div>
+
+</div>
+
+</section>
+
 <!-- SPENDING BREAKDOWN -->
 <section class="spending-section">
 
