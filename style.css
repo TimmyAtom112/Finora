@@ -1248,17 +1248,18 @@ outline-offset: 2px;
 
 }
 
+
 .app-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 15px;
+    padding: 10px 20px;
 }
 
 .finora-logo {
-    max-width: 220px;
-    width: 100%;
+    width: 150px;
     height: auto;
+    display: block;
 }
 
 .theme-toggle {
